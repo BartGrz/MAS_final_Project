@@ -156,7 +156,6 @@
                 <version>0.0.6</version>
                 <configuration><mainClass>com.pl.bg.javamasproject.demo.DemoApplication</mainClass>
                 </configuration>
-
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

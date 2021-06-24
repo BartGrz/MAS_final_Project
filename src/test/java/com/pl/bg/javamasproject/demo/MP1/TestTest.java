@@ -1,9 +1,8 @@
 package com.pl.bg.javamasproject.demo.MP1;
 
 
-import com.pl.bg.javamasproject.demo.SQL.SelectQueryBuilder;
-import com.pl.bg.javamasproject.demo.models.Client;
-import com.pl.bg.javamasproject.demo.models.Patient;
+
+
 
 
 import java.util.Iterator;

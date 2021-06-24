@@ -1,0 +1,18 @@
+TextField {
+    -fx-background-color: #717171;
+}
+
+Pane {
+    -fx-background-color: #3e3a3a
+}
+Button {
+    -fx-background-color: #ffd500
+}
+Label {
+    -fx-background-color: #1f1f1f;
+
+    -fx-text-fill: #c2b411
+}
+ComboBox {
+    -fx-background-color: #1f1f1f;
+}

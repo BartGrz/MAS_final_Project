@@ -1,7 +1,6 @@
 package com.pl.bg.javamasproject.demo.tools.FXML_tools;
 
-import com.pl.bg.javamasproject.demo.models.Client;
-import com.pl.bg.javamasproject.demo.models.Patient;
+
 import com.pl.bg.javamasproject.demo.tools.Looper;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;

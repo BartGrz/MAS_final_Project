@@ -1,8 +1,8 @@
 package com.pl.bg.javamasproject.demo;
 
 
-import com.pl.bg.javamasproject.demo.controllers.PatientController;
-import com.pl.bg.javamasproject.demo.models.Patient;
+import com.pl.bg.javamasproject.demo.controller.VisitController;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -37,8 +37,12 @@ public class SpringbootJavaFxApplication extends Application {
     public void start(Stage stage) throws Exception {
 
      FxWeaver fxWeaver = this.context.getBean(FxWeaver.class);
-     Parent root = fxWeaver.loadView(PatientController.class);
+     Parent root = fxWeaver.loadView(VisitController.class);
      Scene scene = new Scene(root);
+     stage.setTitle("VetSystem2021");
+     stage.setResizable(false);
+     stage.setWidth(905);
+     stage.setHeight(575);
      stage.setScene(scene);
      stage.show();
     }

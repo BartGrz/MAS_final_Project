@@ -20,8 +20,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        Reception reception = context.getBean(Reception.class);
+       // AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+       // Reception reception = context.getBean(Reception.class);
 
 
        // Pet pet =new Pet("kropka",Pet.convertFromEnum(Pet.Species.MAMMAL),2009);
