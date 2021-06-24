@@ -35,7 +35,7 @@ public class VisitService {
 
 
     //TODO : 2021-06-23 add the most important method for use case scenario
-        public void createVisit(int id_client, int id_patient, String visitType, int id_doctor, LocalTime beginTime, LocalTime endTime, LocalDate date_of_visit) {
+        public Visit createVisit(int id_client, int id_patient, String visitType, int id_doctor, LocalTime beginTime, LocalTime endTime, LocalDate date_of_visit) {
 
             var doctor = doctorRepository.findById(id_doctor).get();
             var client = clientRepository.findById(id_client).get();
@@ -45,6 +45,7 @@ public class VisitService {
             var visit = new Visit(visitType,client,doctor,patient,beginTime,endTime,date_of_visit);
             visitRepository.save(visit);
             logger.info("Visit added");
+            return visit;
         }
 
 

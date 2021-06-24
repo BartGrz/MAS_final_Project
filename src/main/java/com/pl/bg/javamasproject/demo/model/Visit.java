@@ -3,11 +3,13 @@ package com.pl.bg.javamasproject.demo.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Component
 @Entity
 @Table(name = "Visit")
 public class Visit {
@@ -32,7 +34,6 @@ public class Visit {
     @Getter
     @Setter
     @Transient
-    @Nullable
     private Technician technician;
     @Getter
     @Setter
@@ -53,7 +54,6 @@ public class Visit {
         this.visit_type = visit_type;
         this.client = client;
         this.doctor = doctor;
-        this.technician = technician;
         this.patient = patient;
         this.date_of_visit=date_of_visit;
         this.beginning_time=beginning_time;
@@ -61,10 +61,7 @@ public class Visit {
     }
     public Visit() {
     }
-    public enum VisitType {CITO, CONTROL,POSTOPERATIVE,OPERATION,STOMATOLOGICAL_VISIT,}
-
-    public void addTechnicianToVisit(Technician technician) {
-
+    public enum VisitType {CITO, CONTROL,POSTOPERATION,OPERATION,STOMATOLOGICAL_VISIT
     }
 
 

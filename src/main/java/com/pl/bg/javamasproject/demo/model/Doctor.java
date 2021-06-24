@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "Doctor")
@@ -52,6 +54,8 @@ public class Doctor extends Employee {
     @Getter
     @Setter
     private Set<Visit> visits;
+
+
     public Doctor(String name, String last_name, String phone_number, String email_adress, String PESEL,
                   Enum<ContractType> contract_type, LocalDate date_of_employment,
                   double bonus, String medical_license_no
@@ -71,16 +75,12 @@ public class Doctor extends Employee {
 
     @Override
     double getIncome() {
-        return 0;
+        return 4500;
     }
 
-    private void fillHoursSet() {
+    public void fillSpecList() {
 
-    }
-
-    public void fillSpecializationSet(int id_doctor, DoctorRepository doctorRepository) {
-        doctorSpecializations = doctorRepository.getAllSpecializations(id_doctor);
-        System.out.println(doctorSpecializations);
+        setDoctorSpecializations( doctorSpecs.stream().map(DoctorSpec::getSpecialization).collect(Collectors.toSet()).stream().map(Specialization::getName).collect(Collectors.toSet()));
 
 
     }

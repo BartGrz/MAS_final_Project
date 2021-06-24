@@ -1,5 +1,6 @@
 package com.pl.bg.javamasproject.demo.tools.FXML_tools;
 
+import com.pl.bg.javamasproject.demo.model.Client;
 import com.pl.bg.javamasproject.demo.tools.Looper;
 import javafx.scene.control.TableView;
 import java.util.List;
@@ -15,4 +16,9 @@ public class TableViewBuild {
 
         tableView.getItems().removeAll(tableView.getItems());
     }
+    public static void addSingleObject(TableView tableView , Object obj) {
+        tableView.getItems().add(obj);
+    }
+
+
 }

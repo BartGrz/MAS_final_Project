@@ -18,4 +18,5 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
     @Override
     Optional<Patient> findById(Integer integer);
+
 }

@@ -27,6 +27,6 @@ public class Specialization {
     }
 
     public enum SpecializationTypes {
-        ONCOLOGIST, STOMATOLOGIST, INTERNIST, SURGEON
+        ONCOLOGIST, STOMATOLOGIST, INTERNIST, SURGEON,CARDIOLOGIST
     }
 }

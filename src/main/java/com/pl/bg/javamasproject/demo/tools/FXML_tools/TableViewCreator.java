@@ -49,23 +49,3 @@ public class TableViewCreator<T, V> {
 
 
 }
-    /*
-    boolean validate(Class clazz) {
-
-        List<String> fieldsList = new ArrayList<>();
-        Field[] tab = clazz.getClass().getDeclaredFields();
-
-        Looper.forLoop(0, tab.length, i -> fieldsList.add(tab[i].getName()));
-
-        if (fieldsList.stream().anyMatch(s -> s.equals(classField))) {
-
-            return true;
-
-        } else {
-            return false;
-        }
-    }
-}
-
-
-     */

@@ -26,7 +26,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Label layoutX="14.0" layoutY="277.0" text="Client name" textFill="#fff200">
+      <Label layoutX="14.0" layoutY="277.0" text="CLIENT NAME" textFill="#fff200">
          <font>
             <Font size="18.0" />
          </font></Label>
@@ -40,35 +40,39 @@
          </columnResizePolicy></TableView>
       <ImageView fx:id="logo_vet" fitHeight="186.0" fitWidth="231.0" layoutX="702.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" />
       <ComboBox fx:id="comboBox_client" layoutX="14.0" layoutY="303.0" onAction="#chooseClient" prefWidth="150.0" />
-      <Label layoutX="188.0" layoutY="277.0" text="Patient" textFill="#fff200">
+      <Label layoutX="188.0" layoutY="277.0" text="PATIENT" textFill="#fff200">
          <font>
             <Font size="18.0" />
          </font></Label>
       <ComboBox fx:id="comboBox_patient" layoutX="188.0" layoutY="303.0" onAction="#choosePatient" prefWidth="150.0" />
       <ComboBox fx:id="comboBox_visitType" layoutX="360.0" layoutY="303.0" onAction="#chooseVisitType" prefWidth="150.0" />
       <ComboBox fx:id="comboBox_doctor" layoutX="535.0" layoutY="303.0" onAction="#chooseDoctor" prefWidth="150.0" />
-      <Label layoutX="535.0" layoutY="277.0" text="Doctor" textFill="#fff200">
+      <Label layoutX="535.0" layoutY="277.0" text="DOCTOR" textFill="#fff200">
          <font>
             <Font size="18.0" />
          </font></Label>
-      <ComboBox fx:id="comboBox_hour" layoutX="804.0" layoutY="303.0" prefHeight="25.0" prefWidth="77.0" />
-      <Label layoutX="360.0" layoutY="277.0" text="Type of visit" textFill="#fff200">
+      <ComboBox fx:id="comboBox_hour" layoutX="804.0" layoutY="303.0" onAction="#readyToGo" prefHeight="25.0" prefWidth="84.0" />
+      <Label layoutX="360.0" layoutY="277.0" text="TYPE OF VISIT" textFill="#fff200">
          <font>
             <Font size="18.0" />
          </font></Label>
-      <Label layoutX="715.0" layoutY="277.0" text="Date" textFill="#fff200">
+      <Label layoutX="695.0" layoutY="277.0" text="DATE" textFill="#fff200">
          <font>
             <Font size="18.0" />
          </font></Label>
-      <TableView fx:id="tableView_doctor" layoutX="422.0" layoutY="416.0" prefHeight="166.0" prefWidth="269.0" />
-      <TableView fx:id="tableView_hour" layoutX="691.0" layoutY="416.0" prefHeight="166.0" prefWidth="241.0" />
+      <TableView fx:id="tableView_doctor" layoutX="422.0" layoutY="416.0" prefHeight="166.0" prefWidth="512.0" />
       <Label layoutX="46.0" layoutY="72.0" prefHeight="53.0" prefWidth="354.0" text="VISIT CREATOR" textFill="#fff200">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
       <Button fx:id="button_clear" layoutX="375.0" layoutY="364.0" mnemonicParsing="false" onAction="#clear" text="CLEAR" />
-      <ComboBox fx:id="comboBox_date" layoutX="710.0" layoutY="303.0" onAction="#showPossibleHours" prefHeight="25.0" prefWidth="77.0" />
-      <Button fx:id="button_accept" layoutX="430.0" layoutY="364.0" mnemonicParsing="false" onAction="#confirmOperation" prefHeight="25.0" prefWidth="133.0" text="Add Visit" />
+      <ComboBox fx:id="comboBox_date" layoutX="692.0" layoutY="303.0" onAction="#showPossibleHours" prefHeight="25.0" prefWidth="95.0" />
+      <Button fx:id="button_accept" layoutX="430.0" layoutY="364.0" mnemonicParsing="false" onAction="#addVisit" prefHeight="25.0" prefWidth="133.0" text="Add Visit" />
+      <Label layoutX="804.0" layoutY="277.0" text="HOURS" textFill="#fff200">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

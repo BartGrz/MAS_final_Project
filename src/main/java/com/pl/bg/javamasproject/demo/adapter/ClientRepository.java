@@ -26,7 +26,9 @@ public interface ClientRepository extends JpaRepository<Client,Integer> {
     Optional<Client> findByClientNumber(@Param("client_number") String client_number);
     @Query(value = "select c from Client c where c.name like :name AND c.last_name = :last_name")
     Optional<Client> findByClientsAndLast_name(@Param("name") String name,@Param("last_name") String last_name);
-    @Query(value = "select p from Patient p JOIN Client c on c.id_client=p.client.id_client")
+    @Query(value = "select p from Patient p JOIN Client c on c.id_client=p.client.id_client where p.id_patient=:id")
     Optional<Patient> findByPatientId(@Param("id") int id_patient);
+    @Query(value = "select p from Patient p JOIN Client c on c.id_client=p.client.id_client where p.name = :name ")
+    Optional<Patient> findByPatienByName(@Param("name") String patient_name);
 
 }

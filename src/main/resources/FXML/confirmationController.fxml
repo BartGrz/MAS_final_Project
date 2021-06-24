@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane minWidth="-Infinity" prefHeight="11.0" prefWidth="738.0" style="-fx-background-color: #2f3129;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pl.bg.javamasproject.demo.controller.ConfirmationController">
+        <children>
+            <MenuBar layoutY="-2.0" prefHeight="29.0" prefWidth="738.0" style="-fx-background-color: #686767;">
+                <menus>
+                    <Menu mnemonicParsing="false" text="File">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Close" />
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Edit">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Delete" />
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Help">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="About" />
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+            <TableView fx:id="tableView_visit" layoutY="145.0" prefHeight="52.0" prefWidth="738.0" />
+      <Label layoutX="260.0" layoutY="57.0" text="CONFIRM ADDING VISIT" textFill="#fff200">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button layoutX="387.0" layoutY="96.0" mnemonicParsing="false" text="CONFIRM" />
+      <Button layoutX="270.0" layoutY="96.0" mnemonicParsing="false" text="DECLINE" />
+        </children>
+    </AnchorPane>
