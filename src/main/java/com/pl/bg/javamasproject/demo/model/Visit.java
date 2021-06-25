@@ -62,7 +62,7 @@ public class Visit {
     }
     public Visit() {
     }
-    public enum VisitType {CITO, CONTROL,POSTOPERATION,OPERATION,STOMATOLOGICAL_VISIT
+    public enum VisitType {CITO, CONTROL,POSTOPERATION,OPERATION,STOMATOLOGICAL_VISIT,CARDIOLOGY
     }
 
 

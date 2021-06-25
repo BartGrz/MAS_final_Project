@@ -6,7 +6,9 @@ import javafx.application.Application;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-
+/**
+ * First javaFx thread must be started, then in springBootJavaFxApplication springBoot app is launched
+ */
 @SpringBootApplication
 public class DemoApplication {
 

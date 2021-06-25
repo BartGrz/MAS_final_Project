@@ -19,14 +19,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import lombok.Getter;
+import lombok.Setter;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Component;
 
+import javax.print.Doc;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -35,7 +39,7 @@ import java.util.*;
 
 
 @Component
-@FxmlView("PatientController.fxml")
+@FxmlView("PatientController.fxml") //from fxWeaver
 public class VisitController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(VisitController.class);
 
@@ -45,7 +49,9 @@ public class VisitController implements Initializable {
     private SpecializationRepository specializationRepository;
     private DoctorSpecRepository doctorSpecRepository;
 
-
+/*
+spring boot autowiring repostories (interfaces) automaticaly while starting
+ */
     public VisitController(ClientRepository clientRepository, DoctorRepository doctorRepository, SpecializationRepository specializationRepository,
                            DoctorSpecRepository doctorSpecRepository, VisitRepository visitRepository
     ) {
@@ -89,6 +95,7 @@ public class VisitController implements Initializable {
     private Map<String, Patient> patientMap = new HashMap<>();
     private StringBuilder stb = new StringBuilder();
     private LocalDate date = LocalDate.now();
+    private boolean emergency = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -108,7 +115,7 @@ public class VisitController implements Initializable {
     }
 
     public void showPatients(Client client) {
-
+        ComboBoxOperations.removeAllFrom(comboBox_patient);
         var patients = client.getPatients();
         patients.forEach(patient -> {
             stb.append(patient.getId_patient() + " " + patient.getName());
@@ -119,9 +126,13 @@ public class VisitController implements Initializable {
 
     }
 
+    /**
+     * Choosing patient from comboBox, building table and process the use case further by showing possible types of visit
+     */
     @FXML
     public void choosePatient() {
-
+        //choosing different patient would add another record to table
+        TableViewBuild.removeAllFromView(tableView_patient);
         showVisitTypes();
         buildTableForPatient();
     }
@@ -134,6 +145,7 @@ public class VisitController implements Initializable {
     @FXML
     public void chooseVisitType() {
 
+        emergency = false;
         button_accept.setVisible(false);
 
         ComboBoxOperations.removeAllFrom(comboBox_doctor);
@@ -145,6 +157,8 @@ public class VisitController implements Initializable {
         comboBox_date.setValue(null);
         TableViewBuild.removeAllFromView(tableView_doctor);
 
+        List<String> listOfSpecsNeeded  = null;
+        Set<Doctor> doctorsWithSpec = new HashSet<>();
         if (comboBox_visitType.getValue() != null) {
             String specialistNeeded = null;
 
@@ -152,18 +166,37 @@ public class VisitController implements Initializable {
                 case "STOMATOLOGICAL_VISIT":
                     specialistNeeded = "STOMATOLOGIST";
                     break;
+                case "CARDIOLOGY" :
+                    specialistNeeded = "CARDIOLOGIST";
+                    break;
                 case "OPERATION":
                     specialistNeeded = "SURGEON";
                     break;
                 case "CONTROL":
-                case "POSTOPERATION":
                     specialistNeeded = "INTERNIST";
                     break;
-                default:
+                case "POSTOPERATION":
+                case "CITO" :
+                    listOfSpecsNeeded = new ArrayList<>();
+                    listOfSpecsNeeded.add("INTERNIST");
+                    listOfSpecsNeeded.add("SURGEON");
+                    emergency = true;
                     break;
             }
 
-            var doctorsWithSpec = doctorRepository.findBySpecialization(specialistNeeded);
+            if(listOfSpecsNeeded!=null) {
+                Set<Doctor> possibleDoctors = new HashSet<>();
+
+                for (String s : listOfSpecsNeeded) {
+                    doctorRepository.findBySpecialization(s).stream().forEach(doctor -> {
+                        possibleDoctors.add(doctor);
+                    });
+                }
+                  doctorsWithSpec = possibleDoctors;
+
+            }else {
+               doctorsWithSpec = doctorRepository.findBySpecialization(specialistNeeded);
+            }
             doctorsWithSpec.stream().forEach(doctor -> {
                 stb.append(doctor.getId_doctor() + " " + doctor.getName() + " " + doctor.getLast_name() + " " + doctor.getMedical_license_no());
                 comboBox_doctor.getItems().add(stb.toString());
@@ -172,7 +205,6 @@ public class VisitController implements Initializable {
 
             });
         }
-        comboBox_visitType.disabledProperty();
     }
 
     @FXML
@@ -190,8 +222,11 @@ public class VisitController implements Initializable {
 
     @FXML
     public void showPossibleDates() throws ParseException {
-
-        Looper.forLoop(0, 14, i -> comboBox_date.getItems().add(date.plusDays(i)));
+        if (!emergency) {
+            Looper.forLoop(0, 14, i -> comboBox_date.getItems().add(date.plusDays(i)));
+        }else {
+            comboBox_date.getItems().add(date);
+        }
     }
 
     @FXML
@@ -210,12 +245,14 @@ public class VisitController implements Initializable {
 
     @FXML
     public void readyToGo() {
-        button_accept.setVisible(true);
+        if (comboBox_hour.getValue() != null) {
+            button_accept.setVisible(true);
+        }
     }
 
     @FXML
     public void chooseClient() {
-
+        TableViewBuild.removeAllFromView(tableView_client);
         if (comboBox_client.getValue() != null) {
             String clientName = comboBox_client.getValue().toString();
             String tab[] = clientName.split(" ");
@@ -231,6 +268,8 @@ public class VisitController implements Initializable {
     @FXML
     public void clear() {
 
+        button_accept.setVisible(false);
+
         ComboBoxOperations.checkIfEmpty(comboBox_client, () -> comboBox_client.setValue(null));
         ComboBoxOperations.checkIfEmpty(comboBox_patient, () -> comboBox_patient.getItems().removeAll(comboBox_patient.getItems()));
         ComboBoxOperations.checkIfEmpty(comboBox_visitType, () -> comboBox_visitType.getItems().removeAll(comboBox_visitType.getItems()));
@@ -245,7 +284,11 @@ public class VisitController implements Initializable {
 
     }
 
+    /**
+     * showing all possible visit types based on enum inside Visti class
+     */
     public void showVisitTypes() {
+        ComboBoxOperations.removeAllFrom(comboBox_visitType);
         EnumSet<Visit.VisitType> visitTypes = EnumSet.allOf(Visit.VisitType.class);
         comboBox_visitType.getItems().addAll(visitTypes);
     }
@@ -253,6 +296,7 @@ public class VisitController implements Initializable {
 
     /**
      * adding visit via visit service based on what user choose in UI , method will call confirmation window from class ConfirmationController
+     * visitInformation is static field, it is passed to the ConfirmationController so table can be build based on this object before stage will appear
      */
     @FXML
     public void addVisit() throws IOException {
@@ -265,24 +309,21 @@ public class VisitController implements Initializable {
         var endHour =LocalTime.parse(comboBox_hour.getValue().toString()).plusHours(1);
         var dateOfVisit = comboBox_date.getValue();
         var visit = new Visit(comboBox_visitType.getValue().toString(),client,doctor,patient,beginHour,endHour,dateOfVisit);
-
         var visitService = new VisitService(visitRepository,doctorRepository,clientRepository);
-        //visitService.createVisit(visit);
-
-
-        clear();
 
         ConfirmationController.visit = visit;
         ConfirmationController.visitService=visitService;
         ConfirmationController controller = new ConfirmationController();
         controller.openConfirmWindow();
+        clear();
 
 
-
-
-
-
-
+        comboBox_client.setVisible(false);
+        button_clear.setText("NEXT");
+        button_clear.setOnAction(event -> {
+            comboBox_client.setVisible(true);
+            button_clear.setText("CLEAR");
+        });
     }
 
     /**
@@ -351,13 +392,6 @@ public class VisitController implements Initializable {
             var doctor = doctorsMap.get(comboBox_doctor.getValue().toString());
             doctor.fillSpecList();
             TableViewBuild.addSingleObject(tableView_doctor, doctor);
-
-    }
-    public void test() {
-
-
-
-
 
     }
 

@@ -111,6 +111,7 @@ public class ConfirmationController  implements Initializable {
         popUp.start_ok("Operation Confirmed");
         visitService.createVisit(visit);
         ConfirmationController.stage.close();
+
     }
 
     @FXML

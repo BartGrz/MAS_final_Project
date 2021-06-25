@@ -22,13 +22,11 @@ public class PatientService {
     private PatientRepository patientRepository;
     private MedicalCardRepository medicalCardRepository;
     private ClientRepository clientRepository;
-    private VaccinesRepository vaccinesRepository;
 
-    public PatientService(PatientRepository patientRepository, MedicalCardRepository medicalCardRepository, ClientRepository clientRepository, VaccinesRepository vaccinesRepository) {
+    public PatientService(PatientRepository patientRepository, MedicalCardRepository medicalCardRepository, ClientRepository clientRepository ) {
         this.patientRepository = patientRepository;
         this.medicalCardRepository = medicalCardRepository;
         this.clientRepository = clientRepository;
-        this.vaccinesRepository = vaccinesRepository;
     }
 
     public Patient createPatient(Patient patient, Client client, Enum<MedicalCard.SpeciesTypes> species, int age) {
@@ -46,6 +44,7 @@ public class PatientService {
                 patient.setClient(client);
                 //adding object to reference on client side
                 client.getPatients().add(patient);
+                medicalCardRepository.save(medicalCard);
                 patientRepository.save(patient);
                 logger.info(" Patient added");
                 return patient;

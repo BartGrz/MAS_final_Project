@@ -61,9 +61,11 @@ public class VisitInformation {
         this.office_number = office.getNumber();
 
         costMap.put(Visit.VisitType.CITO.toString(),300.0);
-        costMap.put(Visit.VisitType.CONTROL.toString(),50.0);
+        costMap.put(Visit.VisitType.CONTROL.toString(),100.0);
         costMap.put(Visit.VisitType.OPERATION.toString(),350.0);
         costMap.put(Visit.VisitType.STOMATOLOGICAL_VISIT.toString(),180.0);
+        costMap.put(Visit.VisitType.POSTOPERATION.toString(),50.0);
+        costMap.put(Visit.VisitType.CARDIOLOGY.toString(),200.0);
 
         this.overall_cost = getVisitOverallCost();
 

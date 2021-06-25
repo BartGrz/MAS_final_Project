@@ -51,7 +51,7 @@ public class PopUp {
         image_ok.setImage(image);
 
         pane.getChildren().addAll(image_ok, label_ok, button);
-        pane.setStyle("-fx-background-color: #2f3129;");
+        pane.setStyle("-fx-background-color: #686767;");
         pane.setStyle("-fx-text-fill: #fff200");
         var scene = new Scene(pane, 190, 130);
         stage.setScene(scene);
@@ -80,7 +80,7 @@ public class PopUp {
         image_ok.setImage(image);
 
         pane.getChildren().addAll(image_ok, label_ok, button);
-        pane.setStyle("-fx-background-color: #2f3129;");
+        pane.setStyle("-fx-background-color: #686767;");
         pane.setStyle("-fx-text-fill: #fff200");
         var scene = new Scene(pane, 190, 130);
         stage.setScene(scene);
