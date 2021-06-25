@@ -27,4 +27,7 @@ public interface VaccinesRepository extends JpaRepository<Vaccines, Integer> {
 
     @Query(value = "select v.id_vaccine from Vaccines v where v.name like :name")
     Integer findIdByName(@Param("name") String vaccineName);
+
+    @Override
+    void deleteById(Integer integer);
 }

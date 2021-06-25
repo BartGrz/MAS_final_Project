@@ -2,19 +2,13 @@ package com.pl.bg.javamasproject.demo.service;
 
 
 import com.pl.bg.javamasproject.demo.adapter.*;
-import com.pl.bg.javamasproject.demo.model.Doctor;
-import com.pl.bg.javamasproject.demo.model.OfficeHours;
-import com.pl.bg.javamasproject.demo.model.Visit;
+import com.pl.bg.javamasproject.demo.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class VisitService {
@@ -33,20 +27,25 @@ public class VisitService {
         this.clientRepository = clientRepository;
     }
 
+    /**
+     * main method which adding visit to database and returnin object of Visit type, logic in UI prevent from typing wrong data
+     * @param visit -> after object of Visit is passed as parameter, method will added its fields to database via repository
+     *              UI prevent user from typing wrong data, so there is no need to double check ex. if(doctor.exist) because system know it does
+     * @return created visit, logic indicates that this object must be return
+     */
+        public void createVisit(Visit visit) {
 
-    //TODO : 2021-06-23 add the most important method for use case scenario
-        public Visit createVisit(int id_client, int id_patient, String visitType, int id_doctor, LocalTime beginTime, LocalTime endTime, LocalDate date_of_visit) {
-
-            var doctor = doctorRepository.findById(id_doctor).get();
-            var client = clientRepository.findById(id_client).get();
-            var patient = clientRepository.findByPatientId(id_patient).get();
-
-            logger.warn(beginTime + " " + endTime);
-            var visit = new Visit(visitType,client,doctor,patient,beginTime,endTime,date_of_visit);
             visitRepository.save(visit);
             logger.info("Visit added");
-            return visit;
-        }
 
+        }
+        public void removeVisit(int id_visit) {
+
+            if(visitRepository.findById(id_visit).get()!=null) {
+                visitRepository.removeById(id_visit);
+                logger.info("Visit with id ="+id_visit + " removed ");
+            }
+
+        }
 
     }

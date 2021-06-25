@@ -24,8 +24,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
     Optional<Doctor> findById(Integer integer);
 
     //will help to find which doctor where chosen to be assagned to the visit
-    @Query(value = "select d from Doctor d where d.medical_license_no like :medical_license_no ")
-    Optional<Doctor> findByLicenseNo(@Param("medical_license_no") String medical_license_no);
+
     @Query(value = "select d from Doctor d join DoctorSpec ds on ds.doctor.id_doctor=d.id_doctor where ds.specialization.name like :specialization_name")
     Set<Doctor> findBySpecialization(@Param("specialization_name")String specialization_name);
     @Query(value = "select o from OfficeHours o JOIN DoctorOfficeHours docOf on o.id_office_hours=docOf.officeHours.id_office_hours where docOf.doctor.id_doctor=:id_doctor")

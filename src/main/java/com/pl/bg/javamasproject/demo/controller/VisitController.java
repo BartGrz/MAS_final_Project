@@ -1,7 +1,6 @@
 package com.pl.bg.javamasproject.demo.controller;
 
 import com.pl.bg.javamasproject.demo.adapter.*;
-import com.pl.bg.javamasproject.demo.controllers.PopUp;
 import com.pl.bg.javamasproject.demo.model.Client;
 import com.pl.bg.javamasproject.demo.model.Doctor;
 import com.pl.bg.javamasproject.demo.model.Patient;
@@ -26,8 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.print.Doc;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -44,9 +41,10 @@ public class VisitController implements Initializable {
 
     private ClientRepository clientRepository;
     private DoctorRepository doctorRepository;
+    private VisitRepository visitRepository;
     private SpecializationRepository specializationRepository;
     private DoctorSpecRepository doctorSpecRepository;
-    private VisitRepository visitRepository;
+
 
     public VisitController(ClientRepository clientRepository, DoctorRepository doctorRepository, SpecializationRepository specializationRepository,
                            DoctorSpecRepository doctorSpecRepository, VisitRepository visitRepository
@@ -80,17 +78,17 @@ public class VisitController implements Initializable {
     private TableView tableView_client = new TableView();
     @FXML
     private TableView tableView_doctor = new TableView();
-
-
+    @FXML
+    private TableView tableView_visit = new TableView();
     @FXML
     private ImageView logo_vet = new ImageView();
+
     private File file_logo = new File(System.getProperty("user.home") + "\\IdeaProjects\\demoMASSpring\\src\\main\\resources\\static\\" + "lekarz-weterynarii.jpg");
     private Map<String, Doctor> doctorsMap = new HashMap<>();
     private Map<String, Client> clientMap = new HashMap<>();
     private Map<String, Patient> patientMap = new HashMap<>();
     private StringBuilder stb = new StringBuilder();
     private LocalDate date = LocalDate.now();
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -135,6 +133,9 @@ public class VisitController implements Initializable {
      */
     @FXML
     public void chooseVisitType() {
+
+        button_accept.setVisible(false);
+
         ComboBoxOperations.removeAllFrom(comboBox_doctor);
         ComboBoxOperations.removeAllFrom(comboBox_hour);
         ComboBoxOperations.removeAllFrom(comboBox_date);
@@ -142,7 +143,7 @@ public class VisitController implements Initializable {
         comboBox_doctor.setValue(null);
         comboBox_hour.setValue(null);
         comboBox_date.setValue(null);
-
+        TableViewBuild.removeAllFromView(tableView_doctor);
 
         if (comboBox_visitType.getValue() != null) {
             String specialistNeeded = null;
@@ -176,6 +177,9 @@ public class VisitController implements Initializable {
 
     @FXML
     public void chooseDoctor() throws ParseException {
+        TableViewBuild.removeAllFromView(tableView_doctor);
+        ComboBoxOperations.removeAllFrom(comboBox_date);
+        ComboBoxOperations.removeAllFrom(comboBox_hour);
 
         if(comboBox_doctor.getValue()!=null) {
             buildTableForDoctor();
@@ -196,7 +200,7 @@ public class VisitController implements Initializable {
             comboBox_hour.getItems().removeAll(comboBox_hour.getItems());
         }
         if (comboBox_date.getValue() != null) {
-            var doctorService = new DoctorService(doctorRepository, specializationRepository, doctorSpecRepository);
+            var doctorService = new DoctorService(doctorRepository, specializationRepository, doctorSpecRepository, visitRepository);
 
             var doctor = doctorRepository.findById(doctorsMap.get(comboBox_doctor.getValue().toString()).getId_doctor()).get();
             var possibleHours = doctorService.getDoctorsHours(doctor, comboBox_date.getValue());
@@ -221,6 +225,9 @@ public class VisitController implements Initializable {
         }
     }
 
+    /**
+     * when method is call it clears all nodes which possesed any data (comboBox,tableViews)
+     */
     @FXML
     public void clear() {
 
@@ -244,31 +251,44 @@ public class VisitController implements Initializable {
     }
 
 
+    /**
+     * adding visit via visit service based on what user choose in UI , method will call confirmation window from class ConfirmationController
+     */
     @FXML
-    public void addVisit() {
+    public void addVisit() throws IOException {
 
-        VisitService visitService = new VisitService(visitRepository, doctorRepository, clientRepository);
+
         var client = clientMap.get(comboBox_client.getValue().toString());
         var patient = patientMap.get(comboBox_patient.getValue().toString());
         var doctor = doctorsMap.get(comboBox_doctor.getValue().toString());
+        var beginHour =  LocalTime.parse(comboBox_hour.getValue().toString());
+        var endHour =LocalTime.parse(comboBox_hour.getValue().toString()).plusHours(1);
+        var dateOfVisit = comboBox_date.getValue();
+        var visit = new Visit(comboBox_visitType.getValue().toString(),client,doctor,patient,beginHour,endHour,dateOfVisit);
 
-        var visit = visitService.createVisit(client.getId_client(), patient.getId_patient()
-                , comboBox_visitType.getValue().toString(), doctor.getId_doctor(),
-                LocalTime.parse(comboBox_hour.getValue().toString()), LocalTime.parse(comboBox_hour.getValue().toString()).plusHours(1), comboBox_date.getValue());
+        var visitService = new VisitService(visitRepository,doctorRepository,clientRepository);
+        //visitService.createVisit(visit);
+
 
         clear();
 
         ConfirmationController.visit = visit;
+        ConfirmationController.visitService=visitService;
         ConfirmationController controller = new ConfirmationController();
-        try {
-            controller.openConfirmWindow();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        controller.openConfirmWindow();
+
+
+
+
+
+
 
     }
 
-    //TODO: 2021-24-06 create methpds to fill tableviews node
+    /**
+     * preparing tablecolumns to be added to tableview, every time the method will run,
+     * previous collection on tableview will be removed, because only one record is needed
+     */
     public void buildTableForClient() {
         tableView_client.getColumns().removeAll(tableView_client.getColumns());
         TableColumn t_name = TableViewCreator.<String, Client>builder()
@@ -286,7 +306,10 @@ public class VisitController implements Initializable {
         TableViewBuild.addSingleObject(tableView_client, client);
 
     }
-
+    /**
+     * preparing tablecolumns to be added to tableview, every time the method will run,
+     * previous collection on tableview will be removed, because only one record is needed
+     */
     public void buildTableForPatient() {
         tableView_patient.getColumns().removeAll(tableView_patient.getColumns());
         if (comboBox_patient.getValue() != null) {
@@ -302,6 +325,10 @@ public class VisitController implements Initializable {
         }
     }
 
+    /**
+     * preparing tablecolumns to be added to tableview, every time the method will run,
+     * previous collection on tableview will be removed, because only one record is needed
+     */
     public void buildTableForDoctor() {
         tableView_doctor.getColumns().removeAll(tableView_doctor.getColumns());
         TableColumn t_name = TableViewCreator.<String, Doctor>builder()
@@ -325,6 +352,13 @@ public class VisitController implements Initializable {
             doctor.fillSpecList();
             TableViewBuild.addSingleObject(tableView_doctor, doctor);
 
+    }
+    public void test() {
+
+
+
+
 
     }
+
 }

@@ -1,6 +1,7 @@
 package com.pl.bg.javamasproject.demo.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,10 +14,14 @@ public class DoctorOfficeHours {
     @Getter
     private DoctorOfficeHoursPK id;
     @ManyToOne(fetch = FetchType.EAGER)
+    @Getter
+    @Setter
     @JoinColumn(name = "id_office_hours",insertable = false,updatable = false)
     private OfficeHours officeHours;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_doctor",insertable = false,updatable = false)
+    @Getter
+    @Setter
     private Doctor doctor;
 
 }

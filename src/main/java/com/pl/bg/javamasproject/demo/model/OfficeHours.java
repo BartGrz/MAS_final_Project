@@ -22,7 +22,7 @@ public class OfficeHours {
     private String tuesday;
     @Getter
     @Setter
-    private String Wednesday;
+    private String wednesday;
     @Getter
     @Setter
     private String thursday;

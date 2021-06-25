@@ -26,5 +26,6 @@ public interface MedicalCardRepository extends JpaRepository<MedicalCard, Intege
     @Query(nativeQuery = true, value = "SELECT name from VACCINES join VACCINATION_RECEIVED VR on VACCINES.ID_VACCINE = VR.ID_VACCINE where VR.ID_MEDICAL_CARD=:id")
     Set<String> findAllVaccinesReceivedById(@Param("id") int id_medical_card);
 
-
+    @Override
+    void deleteById(Integer integer);
 }

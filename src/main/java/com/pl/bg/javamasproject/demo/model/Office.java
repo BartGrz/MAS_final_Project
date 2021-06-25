@@ -2,6 +2,7 @@ package com.pl.bg.javamasproject.demo.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 
@@ -24,6 +25,10 @@ public class Office {
     @Getter
     @Setter
     private Doctor doctor;
+    @Transient
+    @Getter
+    @Setter
+    private VetEquipment vetEquipment;
 
     public Office(int number, Doctor doctor,int ... floor) {
         this.number = number;

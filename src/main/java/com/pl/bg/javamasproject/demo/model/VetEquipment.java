@@ -3,11 +3,12 @@ package com.pl.bg.javamasproject.demo.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @MappedSuperclass
 public class VetEquipment {
+
 
     @Getter
     @Setter
@@ -21,6 +22,10 @@ public class VetEquipment {
     @Getter
     @Setter
     private boolean reservation;
+    @OneToOne
+    @Getter
+    @Setter
+    private Office office;
 
     public VetEquipment(String serial_number, LocalDate date_of_purchase, LocalDate last_service_date, boolean reservation) {
         this.serial_number = serial_number;

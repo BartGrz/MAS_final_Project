@@ -2,7 +2,6 @@ package com.pl.bg.javamasproject.demo.service;
 
 import com.pl.bg.javamasproject.demo.adapter.*;
 import com.pl.bg.javamasproject.demo.model.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -25,7 +24,8 @@ public class DoctorServiceTest {
         var docRepo = mock(DoctorRepository.class);
         var specRepo = mock(SpecializationRepository.class);
         var docSpecRepo = mock(DoctorSpecRepository.class);
-        var doctorService = new DoctorService(docRepo, specRepo, docSpecRepo);
+        var visitRepository = mock(VisitRepository.class);
+        var doctorService = new DoctorService(docRepo, specRepo, docSpecRepo, visitRepository);
         //given
         var doctor = new Doctor("a", "b", "c", "d", "a", Employee.ContractType.B2B, LocalDate.of(2020,10,10), 10.5, "122564");
         doctor.setId_doctor(1);
@@ -49,6 +49,7 @@ public class DoctorServiceTest {
         var docRepo = mock(DoctorRepository.class);
         var specRepo = mock(SpecializationRepository.class);
         var docSpecRepo = mock(DoctorSpecRepository.class);
+        var visitRepository = mock(VisitRepository.class);
         var officeHours = mock(com.pl.bg.javamasproject.demo.model.OfficeHours.class);
 
         var client = mock(Client.class);
@@ -60,7 +61,7 @@ public class DoctorServiceTest {
                 , 10.5, "122564");
 
         var visit = new Visit("STOMATOLOGICAL_VISIT", client, doctor, patient, beginTime, endTime, date_of_visit);
-        var doctorService = new DoctorService(docRepo, specRepo, docSpecRepo);
+        var doctorService = new DoctorService(docRepo, specRepo, docSpecRepo, visitRepository);
 
         List<OfficeHours> setOfHours = new ArrayList<>();
         setOfHours.add(officeHours);
@@ -74,7 +75,7 @@ public class DoctorServiceTest {
        // assertEquals(officeHours.getThursday(),"09:30 - 18:30");
         //when
         when(docRepo.findDoctorsOfficeHours(anyInt())).thenReturn(setOfHours);
-        when(docRepo.findByLicenseNo(any())).thenReturn(Optional.of(doctor));
+        when(docRepo.findById(anyInt())).thenReturn(Optional.of(doctor));
         // officeHours.setThursday("09:30 - 18:30");
         when(officeHours.getThursday()).thenReturn("09:30 - 18:30");
 

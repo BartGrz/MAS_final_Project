@@ -1,23 +1,16 @@
 package com.pl.bg.javamasproject.demo.service;
 
 
-import com.pl.bg.javamasproject.demo.adapter.DoctorRepository;
-import com.pl.bg.javamasproject.demo.adapter.DoctorSpecRepository;
-import com.pl.bg.javamasproject.demo.adapter.SpecializationRepository;
+import com.pl.bg.javamasproject.demo.adapter.*;
 import com.pl.bg.javamasproject.demo.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
-import javax.xml.crypto.Data;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,16 +21,19 @@ public class DoctorService {
     private DoctorRepository doctorRepository;
     private SpecializationRepository specializationRepository;
     private DoctorSpecRepository doctorSpecRepository;
+    private VisitRepository visitRepository;
 
-    public DoctorService(DoctorRepository doctorRepository, SpecializationRepository specializationRepository, DoctorSpecRepository doctorSpecRepository) {
+
+    public DoctorService(DoctorRepository doctorRepository, SpecializationRepository specializationRepository, DoctorSpecRepository doctorSpecRepository, VisitRepository visitRepository) {
         this.doctorRepository = doctorRepository;
         this.specializationRepository = specializationRepository;
         this.doctorSpecRepository = doctorSpecRepository;
 
+        this.visitRepository = visitRepository;
     }
 
     /**
-     * adding given specialization to doctor list of specializations - adding it to class list and to the DoctorSpec class saving it to database
+     * adding given specialization to doctor list of specializations - if specialization have not been added before , method will add it to collection in class and to the DoctorSpec class saving it to database
      *
      * @param id_doctor
      * @param toAdd
@@ -64,8 +60,7 @@ public class DoctorService {
     }
 
     /**
-     * By this method all possibles hours for visit are shown.
-     *
+     * By this method all possibles hours for visit are shown accessed via DoctorOfficeHours field in Doctor class .
      * @param doctor
      * @param date_of_visit
      * @return list of doctors office hour which are not assaignet to any visit
@@ -73,42 +68,34 @@ public class DoctorService {
      */
     public List<LocalTime> getDoctorsHours(Doctor doctor, LocalDate date_of_visit) throws ParseException {
 
-        var setOfDays = doctorRepository.findDoctorsOfficeHours(doctor.getId_doctor());
-
-
-        //parsing LocalDate and finding which day of the week it will be
-        /*
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-        Date date = format.parse(date_of_visit.toString());
-        DateFormat format2 = new SimpleDateFormat("EEEE", Locale.ENGLISH);
-
-         */
+        var officeHours = doctor.getDoctorOfficeHours().getOfficeHours();
         var ld = LocalDate.parse(date_of_visit.toString());
         int day = ld.getDayOfWeek().getValue();
         String beginning_hour;
-        logger.info(" " + day);
-        switch (day) { //Getting doctor's office hours from list 'setOfDays'
+        /*
+        Getting doctor's office hours based on day of the week (1:monday, 7:sunday)
+         */
+        switch (day) {
             case 1:
-                beginning_hour = setOfDays.stream().map(OfficeHours::getMonday).collect(Collectors.joining());
+                beginning_hour = officeHours.getMonday();
                 break;
             case 2:
-                beginning_hour = setOfDays.stream().map(OfficeHours::getTuesday).collect(Collectors.joining());
+                beginning_hour = officeHours.getTuesday();
                 break;
             case 3:
-                beginning_hour = setOfDays.stream().map(OfficeHours::getWednesday).collect(Collectors.joining());
+                beginning_hour = officeHours.getWednesday();
                 break;
             case 4:
-                beginning_hour = setOfDays.stream().map(OfficeHours::getThursday).collect(Collectors.joining());
-                logger.warn(" I AM HERE ");
+                beginning_hour = officeHours.getThursday();
                 break;
             case 5:
-                beginning_hour = setOfDays.stream().map(OfficeHours::getFriday).collect(Collectors.joining());
+                beginning_hour = officeHours.getFriday();
                 break;
             case 6:
-                beginning_hour = setOfDays.stream().map(OfficeHours::getSaturday).collect(Collectors.joining());
+                beginning_hour = officeHours.getSaturday();
                 break;
             case 7:
-                beginning_hour = setOfDays.stream().map(OfficeHours::getSunday).collect(Collectors.joining());
+                beginning_hour = officeHours.getSunday();
                 break;
             default:
                 beginning_hour = "not working";
@@ -116,22 +103,32 @@ public class DoctorService {
         }
 
         //if doctor is not working at this particular day, it will return empty collection
+
         List<LocalTime> listOfHours = new ArrayList<>();
         if (beginning_hour.equals("not working")) {
             return listOfHours;
         }
-        //else it will proceed to find beginning hour and ending hour from String type by split method,
-        // then parsing first element of array as a beginning hour, second as ending and based on it i create loop
-        // (how many hour is doctor woking this day : ex. 10:30 -18:30 = 8;
+        /*
+        else it will proceed to find beginning hour and ending hour from String type by split method,
+         then parsing first element of array as a beginning hour, second as ending and based on it i create loop
+         (how many hour is doctor woking this day : ex. 10:30 -18:30 = 8;
+         */
         String[] tab = beginning_hour.split(" - ");
         LocalTime time = LocalTime.parse(tab[0]);
         LocalTime endTime = LocalTime.parse(tab[1]);
         int length = endTime.getHour() - time.getHour();
+
         for (int i = 0; i < length; i++) {
             listOfHours.add(time);
             time = LocalTime.of(time.getHour() + 1, time.getMinute());
         }
-        if(!doctor.getVisits().isEmpty()) {
+
+        /*
+        check if doctor has any visit already assaigned for this date, if has -> it will compare hours of doctors office to its assaigned visits begin hours
+        when compareTo method returns 0 it means that this hour is booked
+         */
+
+        if (!doctor.getVisits().isEmpty()) {
             if (doctor.getVisits().stream().map(Visit::getDate_of_visit).findAny().get().compareTo(date_of_visit) == 0) {
 
                 for (Visit visit : doctor.getVisits()) {
@@ -143,12 +140,45 @@ public class DoctorService {
                         return false;
                     });
                 }
-
-            } else {
-
             }
         }
-            logger.info("" + listOfHours);
-            return listOfHours;
-        }
+        return listOfHours;
     }
+
+    /**
+     * if nbew doctor is created it shoudl be automatically assaigned to office
+     * @param doctor
+     * @param office
+     */
+    public void createNewDoctor (Doctor doctor, Office office) {
+
+        if (!doctorRepository.existsById(doctor.getId_doctor())) {
+            doctor.setOffice(office);
+            doctorRepository.save(doctor);
+            logger.info("Doctor saved to database");
+        }
+
+    }
+    /**
+     * removing doctor indicates removing references
+     * @param doctor
+     */
+    public void removeDoctor(Doctor doctor) {
+        //if doctor exist then
+        if(doctorRepository.existsById(doctor.getId_doctor())) {
+           var visit = doctor.getVisits();
+           //for any visit doctor was assaigned to :
+           visit.forEach(vis -> {
+               var client = vis.getClient();
+               //remove visists on client side
+               client.getVisits().remove(vis);
+               var patient = vis.getPatient();
+               //remove visists on patient side
+               patient.getVisits().remove(vis);
+               //deleting visit from database
+               visitRepository.deleteById(vis.getId_visit());
+           });
+        }
+
+    }
+}

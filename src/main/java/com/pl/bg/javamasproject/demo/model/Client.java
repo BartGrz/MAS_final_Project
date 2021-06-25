@@ -30,6 +30,10 @@ public class Client extends Person {
     @Getter
     @Setter
     private Set<Patient> patients;
+    @OneToMany
+    @Getter
+    @Setter
+    private Set<Visit> visits;
 
     public Client(String name, String last_name, String phone_number, String email_adress, String PESEL,@Nullable String note ) {
         super(name, last_name, phone_number, email_adress, PESEL);

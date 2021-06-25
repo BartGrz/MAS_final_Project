@@ -64,12 +64,8 @@ public class Doctor extends Employee {
         this.bonus = bonus;
         this.medical_license_no = medical_license_no;
         this.contract_type = contract_type.toString();
-    }
 
-    public void addSpecialization(Enum<Specialization.SpecializationTypes> specialization) {
-        doctorSpecializations.add(specialization.toString());
     }
-
     public Doctor() {
     }
 
@@ -78,9 +74,16 @@ public class Doctor extends Employee {
         return 4500;
     }
 
+    /**
+     * when method is called, it will filled the collection of doctorSpecialization with data provided from database
+     */
     public void fillSpecList() {
 
-        setDoctorSpecializations( doctorSpecs.stream().map(DoctorSpec::getSpecialization).collect(Collectors.toSet()).stream().map(Specialization::getName).collect(Collectors.toSet()));
+        setDoctorSpecializations( doctorSpecs.stream().map(DoctorSpec::getSpecialization)
+                .collect(Collectors.toSet())
+                .stream()
+                .map(Specialization::getName)
+                .collect(Collectors.toSet()));
 
 
     }

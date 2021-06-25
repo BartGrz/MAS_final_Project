@@ -31,7 +31,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button layoutX="387.0" layoutY="96.0" mnemonicParsing="false" text="CONFIRM" />
-      <Button layoutX="270.0" layoutY="96.0" mnemonicParsing="false" text="DECLINE" />
+      <Button layoutX="387.0" layoutY="96.0" mnemonicParsing="false" onAction="#confirm" text="CONFIRM" />
+      <Button layoutX="270.0" layoutY="96.0" mnemonicParsing="false" onAction="#decline" text="DECLINE" />
         </children>
     </AnchorPane>

@@ -25,10 +25,10 @@ public class MedicalCard {
     @Getter
     @Setter
     private Patient patient;
-    @Transient
+    @OneToMany
     @Getter
     @Setter
-    private Set<String> vaccines;
+    private Set<VaccinationReceived> vaccinationReceived;
 
     public MedicalCard(Enum<SpeciesTypes> species, int age) {
         this.species = species.toString();

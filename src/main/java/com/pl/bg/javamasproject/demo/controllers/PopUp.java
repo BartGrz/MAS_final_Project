@@ -1,5 +1,6 @@
 package com.pl.bg.javamasproject.demo.controllers;
 
+import com.pl.bg.javamasproject.demo.service.VisitService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,16 +20,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
 public class PopUp {
 
     private ImageView image_ok = new ImageView();
     private Label label_ok = new Label();
     static Stage stage = new Stage();
-    private Button button = new Button();
+    static public Button button = new Button();
     private Image image;
-    private File file_ok = new File(System.getProperty("user.home") + "\\Desktop\\" + "ok-1976099_960_720.png");
-    private File file_error = new File(System.getProperty("user.home") + "\\Desktop\\" + "error.png");
+    private File file_ok = new File(System.getProperty("user.home") + "\\IdeaProjects\\demoMASSpring\\src\\main\\resources\\static\\" + "ok-1976099_960_720.png");
+    private File file_error = new File(System.getProperty("user.home") + "\\IdeaProjects\\demoMASSpring\\src\\main\\resources\\static\\" + "error.png");
     private Pane pane = new Pane();
 
     public void start_ok(String message) {
@@ -51,8 +51,10 @@ public class PopUp {
         image_ok.setImage(image);
 
         pane.getChildren().addAll(image_ok, label_ok, button);
-
-        stage.setScene(new Scene(pane, 190, 130));
+        pane.setStyle("-fx-background-color: #2f3129;");
+        pane.setStyle("-fx-text-fill: #fff200");
+        var scene = new Scene(pane, 190, 130);
+        stage.setScene(scene);
         stage.show();
 
     }
@@ -78,8 +80,10 @@ public class PopUp {
         image_ok.setImage(image);
 
         pane.getChildren().addAll(image_ok, label_ok, button);
-
-        stage.setScene(new Scene(pane, 190, 130));
+        pane.setStyle("-fx-background-color: #2f3129;");
+        pane.setStyle("-fx-text-fill: #fff200");
+        var scene = new Scene(pane, 190, 130);
+        stage.setScene(scene);
         stage.show();
 
     }
