@@ -22,10 +22,7 @@ public class VetEquipment {
     @Getter
     @Setter
     private boolean reservation;
-    @OneToOne
-    @Getter
-    @Setter
-    private Office office;
+
 
     public VetEquipment(String serial_number, LocalDate date_of_purchase, LocalDate last_service_date, boolean reservation) {
         this.serial_number = serial_number;

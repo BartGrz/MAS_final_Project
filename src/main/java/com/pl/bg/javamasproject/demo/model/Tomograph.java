@@ -17,6 +17,11 @@ public class Tomograph extends VetEquipment {
     @Getter
     @Setter
     private double contrast;
+    @ManyToOne
+    @JoinColumn(name = "id_office")
+    @Getter
+    @Setter
+    private Office office;
 
     public Tomograph(String serial_number, LocalDate date_of_purchase, LocalDate last_service_date, boolean reservation, double contrast) {
         super(serial_number, date_of_purchase, last_service_date, reservation);

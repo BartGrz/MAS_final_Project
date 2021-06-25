@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "Office")
@@ -30,12 +31,13 @@ public class Office {
     @Setter
     private VetEquipment vetEquipment;
 
-    public Office(int number, Doctor doctor,int ... floor) {
+
+    public Office(int number, Doctor doctor, int... floor) {
         this.number = number;
-        if(floor.length>0) {
+        if (floor.length > 0) {
             this.floor = floor[0];
-        }else {
-            this.floor=0;
+        } else {
+            this.floor = 0;
         }
         this.doctor = doctor;
     }

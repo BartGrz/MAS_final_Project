@@ -20,6 +20,11 @@ public class RTG extends VetEquipment {
     @Getter
     @Setter
     private int protective_aprons;
+    @ManyToOne
+    @JoinColumn(name = "id_office")
+    @Getter
+    @Setter
+    private Office office;
 
     public RTG(String serial_number, LocalDate date_of_purchase, LocalDate last_service_date, boolean reservation, int available_plates, int protective_aprons) {
         super(serial_number, date_of_purchase, last_service_date, reservation);

@@ -25,7 +25,7 @@ public class MedicalCard {
     @Getter
     @Setter
     private Patient patient;
-    @OneToMany
+    @OneToMany(mappedBy = "medicalCard")
     @Getter
     @Setter
     private Set<VaccinationReceived> vaccinationReceived;

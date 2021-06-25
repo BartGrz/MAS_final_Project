@@ -1,11 +1,14 @@
 package com.pl.bg.javamasproject.demo.service;
 
 import com.pl.bg.javamasproject.demo.adapter.DoctorRepository;
-import com.pl.bg.javamasproject.demo.adapter.MedicalEquipmentRepository;
+import com.pl.bg.javamasproject.demo.adapter.RTGRepository;
 import com.pl.bg.javamasproject.demo.adapter.OfficeRepository;
+import com.pl.bg.javamasproject.demo.adapter.TomographRepository;
 import com.pl.bg.javamasproject.demo.model.Doctor;
 import com.pl.bg.javamasproject.demo.model.Office;
 import org.junit.jupiter.api.Test;
+
+import javax.security.auth.callback.TextOutputCallback;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -18,9 +21,10 @@ class OfficeServiceTest {
         //given
         var docRepo = mock(DoctorRepository.class);
         var officeRepo = mock(OfficeRepository.class);
-        var medicalEquipmentRepository= mock(MedicalEquipmentRepository.class);
+        var rtgRepository= mock(RTGRepository.class);
+        var tomographRepository = mock(TomographRepository.class);
         var doctor = mock(Doctor.class);
-        var officeService = new OfficeService(officeRepo,docRepo, medicalEquipmentRepository);
+        var officeService = new OfficeService(officeRepo,docRepo, rtgRepository, tomographRepository);
         var office = mock(Office.class);
         office.setNumber(1);
 

@@ -30,7 +30,7 @@ public class Client extends Person {
     @Getter
     @Setter
     private Set<Patient> patients;
-    @OneToMany
+    @OneToMany(mappedBy = "client")
     @Getter
     @Setter
     private Set<Visit> visits;

@@ -49,6 +49,7 @@ public class Visit {
     @Getter
     @Setter
     private Patient patient;
+
     //Techni
     public Visit(String visit_type, Client client, Doctor doctor, Patient patient,LocalTime beginning_time, LocalTime ending_time, LocalDate date_of_visit) {
         this.visit_type = visit_type;
