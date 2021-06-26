@@ -63,7 +63,7 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
     }
 
     @FXML
-    private Button button_clear = new Button();
+     private Button button_clear = new Button();
     @FXML
     private Button button_accept = new Button();
     @FXML
@@ -97,6 +97,12 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
     private LocalDate date = LocalDate.now();
     private boolean emergency = false;
 
+    /**
+     * comboBox_client is filled with data from system, and every object is put in map with String key value 'id_name_last_name' to be easily found
+     * even if  there are many clients with the same name or even last name
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         button_accept.setVisible(false);
@@ -114,6 +120,11 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
 
     }
 
+    /**
+     * showing clients pets which are clinic patients, every object is put in map with string key value 'id_name' to be easily founded in map
+     * even if there are (nearly impossible) patients with the same
+     * @param client
+     */
     public void showPatients(Client client) {
         ComboBoxOperations.removeAllFrom(comboBox_patient);
         var patients = client.getPatients();
@@ -141,6 +152,8 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
      * based on what would be chosen in comboBox ,method will choose possible doctors suitable for this type of operation,
      * it is possible to change type of operation which will indicate chain of effect (doctor,dates,hour)
      * that's why all informations must be removed from combobox and have to be reloaded
+     *
+     * every object of Doctor type will be added to map with String key value 'id_name_lastName_medicalLicenceNo' to be easily found among other doctor objects
      */
     @FXML
     public void chooseVisitType() {
@@ -176,6 +189,10 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
                     specialistNeeded = "INTERNIST";
                     break;
                 case "POSTOPERATION":
+                    listOfSpecsNeeded = new ArrayList<>();
+                    listOfSpecsNeeded.add("INTERNIST");
+                    listOfSpecsNeeded.add("SURGEON");
+                    break;
                 case "CITO" :
                     listOfSpecsNeeded = new ArrayList<>();
                     listOfSpecsNeeded.add("INTERNIST");
@@ -183,7 +200,10 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
                     emergency = true;
                     break;
             }
-
+            /*
+            if there is not only one specialization possible, all possibles spec will be added to list ,and then in for each loop every doctor with specialization needed
+             will be added to set
+             */
             if(listOfSpecsNeeded!=null) {
                 Set<Doctor> possibleDoctors = new HashSet<>();
 
@@ -194,6 +214,9 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
                 }
                   doctorsWithSpec = possibleDoctors;
 
+                /*
+                if there is one spiecialization needen, all is managed by repository returning set of possible doctors
+                 */
             }else {
                doctorsWithSpec = doctorRepository.findBySpecialization(specialistNeeded);
             }
@@ -207,6 +230,12 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
         }
     }
 
+    /**
+     * choposing doctor and procceed use case further to choosing date,
+     * every time method is called  all data set before on comboBox_date,
+     * comboBox_hour will be removed and tableView_doctor will be cleaned
+     * @throws ParseException
+     */
     @FXML
     public void chooseDoctor() throws ParseException {
         TableViewBuild.removeAllFromView(tableView_doctor);
@@ -220,6 +249,10 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
 
     }
 
+    /**
+     * Showing possible dates - default is two weeks (14)
+     * @throws ParseException
+     */
     @FXML
     public void showPossibleDates() throws ParseException {
         if (!emergency) {
@@ -229,6 +262,11 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
         }
     }
 
+    /**
+     * showing possible doctor hours based on date choosen in date comboBox and doctor list of possible hours from doctor service method
+     * if doctor is not working on choosen date, popup window will appear with suitable information and combobox_date and comboBox_hour will be reloaded,
+     * @throws ParseException
+     */
     @FXML
     public void showPossibleHours() throws ParseException {
         if (!comboBox_hour.getItems().isEmpty()) {
@@ -240,9 +278,25 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
             var doctor = doctorRepository.findById(doctorsMap.get(comboBox_doctor.getValue().toString()).getId_doctor()).get();
             var possibleHours = doctorService.getDoctorsHours(doctor, comboBox_date.getValue());
             possibleHours.stream().forEach(localTime -> comboBox_hour.getItems().add(localTime));
+
+            if(comboBox_hour.getItems().isEmpty()) {
+                comboBox_hour.setVisible(false);
+                PopUp popUp = new PopUp(400,130);
+                popUp.start_error("Doctor is not working on this day, choose another date ");
+                PopUp.button.setOnAction(event ->  {
+                    comboBox_hour.setVisible(true);
+                    comboBox_date.setValue(null);
+                    PopUp.stage.close();
+                });
+            }else {
+                comboBox_hour.setVisible(true);
+            }
         }
     }
 
+    /**
+     * showing add visit button, when all comboBox have value
+     */
     @FXML
     public void readyToGo() {
         if (comboBox_hour.getValue() != null) {
@@ -285,7 +339,7 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
     }
 
     /**
-     * showing all possible visit types based on enum inside Visti class
+     * showing all possible visit types based on enum inside Visit class
      */
     public void showVisitTypes() {
         ComboBoxOperations.removeAllFrom(comboBox_visitType);
@@ -297,6 +351,7 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
     /**
      * adding visit via visit service based on what user choose in UI , method will call confirmation window from class ConfirmationController
      * visitInformation is static field, it is passed to the ConfirmationController so table can be build based on this object before stage will appear
+     * during confirmation all operation will be blocked on main window until
      */
     @FXML
     public void addVisit() throws IOException {
@@ -321,8 +376,11 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
         comboBox_client.setVisible(false);
         button_clear.setText("NEXT");
         button_clear.setOnAction(event -> {
-            comboBox_client.setVisible(true);
-            button_clear.setText("CLEAR");
+            if(!ConfirmationController.stage.isShowing()){
+                comboBox_client.setVisible(true);
+                button_clear.setText("CLEAR");
+            }
+
         });
     }
 
@@ -361,7 +419,6 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
                     .buildColumn();
             tableView_patient.getColumns().add(t_name);
             var patient = patientMap.get(comboBox_patient.getValue().toString());
-          logger.info(patient.getName());
             TableViewBuild.addSingleObject(tableView_patient, patient);
         }
     }

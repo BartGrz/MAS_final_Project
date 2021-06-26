@@ -154,6 +154,7 @@ public class DoctorService {
 
         if (!doctorRepository.existsById(doctor.getId_doctor())) {
             doctor.setOffice(office);
+            office.setDoctor(doctor);
             doctorRepository.save(doctor);
             logger.info("Doctor saved to database");
         }

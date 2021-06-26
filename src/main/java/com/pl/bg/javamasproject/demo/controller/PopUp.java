@@ -1,10 +1,5 @@
-package com.pl.bg.javamasproject.demo.controllers;
+package com.pl.bg.javamasproject.demo.controller;
 
-import com.pl.bg.javamasproject.demo.service.VisitService;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,15 +7,26 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class PopUp {
+
+    private double width = 0;
+    private double height = 0;
+
+    /**
+     * If window size has to be changed (longer message)
+     * @param width
+     * @param height
+     */
+    public PopUp(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public PopUp() {
+    }
 
     private ImageView image_ok = new ImageView();
     private Label label_ok = new Label();
@@ -31,6 +37,10 @@ public class PopUp {
     private File file_error = new File(System.getProperty("user.home") + "\\IdeaProjects\\demoMASSpring\\src\\main\\resources\\static\\" + "error.png");
     private Pane pane = new Pane();
 
+    /**
+     * showing window ok (img success) with message past as method parameter
+     * @param message
+     */
     public void start_ok(String message) {
 
         label_ok.setLayoutX(67.0);
@@ -53,12 +63,23 @@ public class PopUp {
         pane.getChildren().addAll(image_ok, label_ok, button);
         pane.setStyle("-fx-background-color: #686767;");
         pane.setStyle("-fx-text-fill: #fff200");
-        var scene = new Scene(pane, 190, 130);
+        Scene scene = null;
+        if (width != 0 && height != 0) {
+            scene = new Scene(pane, width, height);
+            button.setLayoutX(pane.getWidth()/2); //button should be in the center of window
+        } else {
+            scene = new Scene(pane, 190, 130);
+        }
         stage.setScene(scene);
+        stage.setTitle("SUCCESS");
         stage.show();
 
     }
 
+    /**
+     * showing window ok (img error) with message past as method parameter
+     * @param message
+     */
     public void start_error(String message) {
 
 
@@ -82,8 +103,15 @@ public class PopUp {
         pane.getChildren().addAll(image_ok, label_ok, button);
         pane.setStyle("-fx-background-color: #686767;");
         pane.setStyle("-fx-text-fill: #fff200");
-        var scene = new Scene(pane, 190, 130);
+        Scene scene = null;
+        if (width != 0 && height != 0) {
+            scene = new Scene(pane, width, height);
+            button.setLayoutX(pane.getWidth()/2);
+        } else {
+            scene = new Scene(pane, 190, 130);
+        }
         stage.setScene(scene);
+        stage.setTitle("ERROR");
         stage.show();
 
     }

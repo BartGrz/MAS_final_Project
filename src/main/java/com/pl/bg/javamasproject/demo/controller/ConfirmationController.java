@@ -1,6 +1,5 @@
 package com.pl.bg.javamasproject.demo.controller;
 
-import com.pl.bg.javamasproject.demo.controllers.PopUp;
 import com.pl.bg.javamasproject.demo.holder.VisitInformation;
 import com.pl.bg.javamasproject.demo.model.Visit;
 import com.pl.bg.javamasproject.demo.service.VisitService;
@@ -42,8 +41,6 @@ public class ConfirmationController  implements Initializable {
 
     public void openConfirmWindow() throws IOException {
 
-
-
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/confirmationController.fxml"));
 
         stage.setResizable(false);
@@ -59,7 +56,6 @@ public class ConfirmationController  implements Initializable {
     public void buildTable() {
 
         VisitInformation visitInfo = new VisitInformation(visit);
-        System.out.println(visitInfo.getBeginingOfVisit());
 
         TableColumn t_clientName = TableViewCreator.<String, VisitInformation>builder()
                 .columnName("Client")
@@ -112,6 +108,7 @@ public class ConfirmationController  implements Initializable {
         visitService.createVisit(visit);
         ConfirmationController.stage.close();
 
+
     }
 
     @FXML
@@ -122,6 +119,7 @@ public class ConfirmationController  implements Initializable {
         PopUp popUp = new PopUp();
         popUp.start_error("Operation Declined");
         ConfirmationController.stage.close();
+
 
     }
     @Override
