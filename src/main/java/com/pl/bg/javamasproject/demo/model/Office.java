@@ -44,4 +44,5 @@ public class Office {
 
     public Office() {
     }
+
 }

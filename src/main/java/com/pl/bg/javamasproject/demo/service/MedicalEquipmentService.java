@@ -97,5 +97,14 @@ public class MedicalEquipmentService<T> {
         logger.warn("equipment removed");
     }
 
+    public Office findOfficeWithEq(T t ) {
+        if(t instanceof Tomograph) {
+            return ((Tomograph) t).getOffice();
+        }
+        if(t instanceof RTG) {
+            return ((RTG) t).getOffice();
+        }
+        return null;
+    }
 
 }

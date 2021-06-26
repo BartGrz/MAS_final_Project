@@ -35,7 +35,8 @@ public class DoctorService {
     }
 
     /**
-     * adding given specialization to doctor list of specializations - if specialization have not been added before , method will add it to collection in class and to the DoctorSpec class saving it to database
+     * adding given specialization to doctor list of specializations - if specialization have not been added before ,
+     * method will add it to collection in class and to the DoctorSpec class saving it to database
      *
      * @param id_doctor
      * @param toAdd
@@ -142,6 +143,10 @@ public class DoctorService {
                         return false;
                     });
                 }
+                /*
+                if doctor is booked (every hour of work is booked) then booked will be set to true
+                 in visitController in showPossibleHours() method it will show suitable info
+                 */
                 booked=true;
             }
         }

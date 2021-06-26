@@ -264,6 +264,7 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
     /**
      * showing possible doctor hours based on date choosen in date comboBox and doctor list of possible hours from doctor service method
      * if doctor is not working on choosen date, popup window will appear with suitable information and combobox_date and comboBox_hour will be reloaded,
+     * if doctor is booked for this day, suitable message window will pop
      * @throws ParseException
      */
     @FXML
