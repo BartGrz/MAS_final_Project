@@ -29,7 +29,7 @@ public class PatientService {
         this.clientRepository = clientRepository;
     }
 
-    public Patient createPatient(Patient patient, Client client, Enum<MedicalCard.SpeciesTypes> species, int age) {
+    public void createPatient(Patient patient, Client client, Enum<MedicalCard.SpeciesTypes> species, int age) {
 
         if (clientRepository.existsById(client.getId_client())) {
             if (!patientRepository.existsById(patient.getId_patient())) {
@@ -47,17 +47,13 @@ public class PatientService {
                 medicalCardRepository.save(medicalCard);
                 patientRepository.save(patient);
                 logger.info(" Patient added");
-                return patient;
+
             } else {
                 logger.warn(" Patient already exist");
             }
-
-
-            return patient;
         } else {
             logger.warn("there is no client with given id");
         }
-        return null;
     }
 
 

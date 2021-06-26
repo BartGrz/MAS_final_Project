@@ -3,6 +3,7 @@ package com.pl.bg.javamasproject.demo.service;
 
 import com.pl.bg.javamasproject.demo.adapter.*;
 import com.pl.bg.javamasproject.demo.model.*;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,13 @@ public class DoctorService {
     private DoctorSpecRepository doctorSpecRepository;
     private VisitRepository visitRepository;
 
+    @Getter
+    private boolean booked = false;
 
     public DoctorService(DoctorRepository doctorRepository, SpecializationRepository specializationRepository, DoctorSpecRepository doctorSpecRepository, VisitRepository visitRepository) {
         this.doctorRepository = doctorRepository;
         this.specializationRepository = specializationRepository;
         this.doctorSpecRepository = doctorSpecRepository;
-
         this.visitRepository = visitRepository;
     }
 
@@ -140,11 +142,11 @@ public class DoctorService {
                         return false;
                     });
                 }
+                booked=true;
             }
         }
         return listOfHours;
     }
-
     /**
      * if nbew doctor is created it shoudl be automatically assaigned to office
      * @param doctor
@@ -156,6 +158,7 @@ public class DoctorService {
             doctor.setOffice(office);
             office.setDoctor(doctor);
             doctorRepository.save(doctor);
+            doctorRepository.insertIntoOffice(doctor.getId_doctor(),office.getId_office());
             logger.info("Doctor saved to database");
         }
 
@@ -180,6 +183,7 @@ public class DoctorService {
                visitRepository.deleteById(vis.getId_visit());
            });
         }
+
 
     }
 }

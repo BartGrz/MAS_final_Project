@@ -7,19 +7,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Repository
 public interface ClientRepository extends JpaRepository<Client,Integer> {
 
     @Override
     List<Client> findAll();
-
     @Override
     Client  save(Client client);
-
     @Override
     Optional<Client> findById(Integer integer);
     @Query(value = "select c from Client c where c.client_number like :client_number")

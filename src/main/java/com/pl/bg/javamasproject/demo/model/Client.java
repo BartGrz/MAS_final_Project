@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.Set;
 
 
@@ -25,7 +26,7 @@ public class Client extends Person {
     private String note;
     @Getter
     @Setter
-    private String client_number; 
+    private String client_number;
     @OneToMany(mappedBy = "client",fetch = FetchType.EAGER)
     @Getter
     @Setter

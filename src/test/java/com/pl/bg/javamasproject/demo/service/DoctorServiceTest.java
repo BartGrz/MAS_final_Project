@@ -12,8 +12,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 public class DoctorServiceTest {
@@ -33,6 +32,7 @@ public class DoctorServiceTest {
         doctor.getDoctorSpecializations().add("ONCOLOGIST");
         var special = new Specialization(Specialization.SpecializationTypes.STOMATOLOGIST);
 
+
         //when
         when(docRepo.findById(1)).thenReturn(Optional.of(doctor));
         when(specRepo.findById(anyInt())).thenReturn(Optional.of(special));
@@ -41,6 +41,7 @@ public class DoctorServiceTest {
         //then
 
         doctorService.addSpecialization(doctor.getId_doctor(), Specialization.SpecializationTypes.ONCOLOGIST);
+
     }
 
     @Test

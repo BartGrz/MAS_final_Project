@@ -1,10 +1,7 @@
 package com.pl.bg.javamasproject.demo.controller;
 
 import com.pl.bg.javamasproject.demo.adapter.*;
-import com.pl.bg.javamasproject.demo.model.Client;
-import com.pl.bg.javamasproject.demo.model.Doctor;
-import com.pl.bg.javamasproject.demo.model.Patient;
-import com.pl.bg.javamasproject.demo.model.Visit;
+import com.pl.bg.javamasproject.demo.model.*;
 import com.pl.bg.javamasproject.demo.service.DoctorService;
 import com.pl.bg.javamasproject.demo.service.VisitService;
 import com.pl.bg.javamasproject.demo.tools.FXML_tools.ComboBoxOperations;
@@ -26,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.print.Doc;
 import java.io.File;
@@ -126,9 +124,10 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
      * @param client
      */
     public void showPatients(Client client) {
+
+
         ComboBoxOperations.removeAllFrom(comboBox_patient);
-        var patients = client.getPatients();
-        patients.forEach(patient -> {
+        client.getPatients().forEach(patient -> {
             stb.append(patient.getId_patient() + " " + patient.getName());
             comboBox_patient.getItems().add(stb.toString());
             patientMap.put(stb.toString(), patient);
@@ -271,22 +270,35 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
     public void showPossibleHours() throws ParseException {
         if (!comboBox_hour.getItems().isEmpty()) {
             comboBox_hour.getItems().removeAll(comboBox_hour.getItems());
+            button_accept.setVisible(false);
         }
         if (comboBox_date.getValue() != null) {
             var doctorService = new DoctorService(doctorRepository, specializationRepository, doctorSpecRepository, visitRepository);
-
             var doctor = doctorRepository.findById(doctorsMap.get(comboBox_doctor.getValue().toString()).getId_doctor()).get();
             var possibleHours = doctorService.getDoctorsHours(doctor, comboBox_date.getValue());
             possibleHours.stream().forEach(localTime -> comboBox_hour.getItems().add(localTime));
 
-            if(comboBox_hour.getItems().isEmpty()) {
+            if(doctorService.isBooked()) {
+                comboBox_hour.setVisible(false);
+                PopUp popUp = new PopUp(190,130);
+                popUp.start_error("Doctor is booked");
+                PopUp.button.setOnAction(event ->  {
+                    button_accept.setVisible(false);
+                    comboBox_hour.setVisible(true);
+                    comboBox_date.setValue(null);
+                    PopUp.stage.close();
+
+                });
+            }else if(comboBox_hour.getItems().isEmpty()) {
                 comboBox_hour.setVisible(false);
                 PopUp popUp = new PopUp(400,130);
                 popUp.start_error("Doctor is not working on this day, choose another date ");
                 PopUp.button.setOnAction(event ->  {
+                    button_accept.setVisible(false);
                     comboBox_hour.setVisible(true);
                     comboBox_date.setValue(null);
                     PopUp.stage.close();
+
                 });
             }else {
                 comboBox_hour.setVisible(true);
@@ -379,6 +391,7 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
             if(!ConfirmationController.stage.isShowing()){
                 comboBox_client.setVisible(true);
                 button_clear.setText("CLEAR");
+                button_clear.setOnAction(event1 -> clear());
             }
 
         });
@@ -412,13 +425,14 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
     public void buildTableForPatient() {
         tableView_patient.getColumns().removeAll(tableView_patient.getColumns());
         if (comboBox_patient.getValue() != null) {
+
             TableColumn t_name = TableViewCreator.<String, Patient>builder()
                     .columnName("Name")
                     .classField("name")
                     .build()
                     .buildColumn();
-            tableView_patient.getColumns().add(t_name);
             var patient = patientMap.get(comboBox_patient.getValue().toString());
+            tableView_patient.getColumns().addAll(t_name);
             TableViewBuild.addSingleObject(tableView_patient, patient);
         }
     }
@@ -447,6 +461,7 @@ spring boot autowiring repostories (interfaces) automaticaly while starting
 
             tableView_doctor.getColumns().addAll(t_name, t_lastName, t_specs);
             var doctor = doctorsMap.get(comboBox_doctor.getValue().toString());
+
             doctor.fillSpecList();
             TableViewBuild.addSingleObject(tableView_doctor, doctor);
 

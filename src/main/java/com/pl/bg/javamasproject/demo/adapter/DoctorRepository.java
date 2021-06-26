@@ -6,9 +6,11 @@ import com.pl.bg.javamasproject.demo.model.OfficeHours;
 import com.pl.bg.javamasproject.demo.model.Visit;
 import lombok.Setter;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,10 @@ public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
 
     @Query(value = "select v from Visit v where v.doctor.id_doctor=:id_doctor")
     List<Visit> findVisitsById(@Param("id_doctor") int id_doctor);
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true , value ="UPDATE OFFICE set ID_DOCTOR= :id_doctor where ID_OFFICE=:id_office" )
+    void insertIntoOffice(@Param("id_doctor")int id_doctor, @Param("id_office")int id_office);
 
 
 }

@@ -46,7 +46,7 @@ public class Doctor extends Employee {
     @Setter
     @OneToOne(mappedBy = "doctor")
     private Office office;
-    @OneToOne(mappedBy = "doctor",fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "doctor",fetch = FetchType.LAZY)
     @Getter
     @Setter
     private DoctorOfficeHours doctorOfficeHours;
