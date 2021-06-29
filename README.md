@@ -1,7 +1,7 @@
 
 # Final Project "VetSystem"
 
-## For this cource I decided to create application which could be used in Veterinary clinic. I was asked to create GUI based on use case scenario from documentation I have prepared earlier. This part contains adding visit to database. 
+## For this course I decided to create application which could be used in Veterinary clinic. I was asked to create GUI based on use case scenario from documentation I have prepared earlier. This part contains adding visit to database. 
 
 ## Pocess flow example
 
