@@ -3,7 +3,7 @@
 
 ## For this course I decided to create application which could be used in Veterinary clinic. I was asked to create GUI based on use case scenario from documentation I have prepared earlier. This part contains adding visit to database. 
 
-## Pocess flow example
+## Process flow example
 
 * ### Main Window with values  
 <a href="https://drive.google.com/uc?export=view&id=1COx0JO7LO4HUwVxkfs4sjS0_DIySop6a"><img src="https://drive.google.com/uc?export=view&id=1COx0JO7LO4HUwVxkfs4sjS0_DIySop6a" width="550" style="width: 650px; max-width: 100%; height: auto" title="Click to enlarge picture" />
